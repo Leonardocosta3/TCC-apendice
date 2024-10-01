@@ -5,23 +5,23 @@ import pandas as pd
 from ultralytics import YOLOv10
 
 # Carregar o modelo YOLOv10
-model = YOLOv10(f'Yolov10s\weights\Yolov10Sbest.pt')
+model = YOLOv10(f'path/modelo')
 
 # Inicializar a captura de vídeo
 cap = cv2.VideoCapture(0) # Indice da cámera
 
 # Variáveis para o contador e estado dos olhos
-contador_piscadas = 0 # Variavel de contagem de Piscadas
-piscadas_tempo = 0 # Variavel de contagem de duração de uma Piscada
+contador_piscadas = 0 # Variável de contagem de Piscadas
+piscadas_tempo = 0 # Variável de contagem de duração de uma Piscada
 estado_anterior_olhos = "aberto"
-limite_contador_olhos = 30 # Limite de piscadas em um determinado periodo
+limite_contador_olhos = 30 # Limite de piscadas em um determinado período
 tempo_piscada = 0
 
 # Variáveis para o contador e estado da cabeça
-contador_cabeca_baixa = 0 # Variavel de contagem de Pescadas
-tempo_cabeça_baixa = 0 # Variavel de contagem de duração de uma Pescada
+contador_cabeca_baixa = 0 # Variável de contagem de Pescadas
+tempo_cabeça_baixa = 0 # Variável de contagem de duração de uma Pescada
 estado_anterior_cabeca = "atenta"
-limite_contador_cabeca = 5 # Limite de pescadas em um determinado periodo
+limite_contador_cabeca = 5 # Limite de pescadas em um determinado período
 
 # Variáveis para controlar o alerta
 alerta_ativo = False
@@ -30,7 +30,7 @@ duracao_alerta = 10  # Duração do alerta em segundos
 
 # Loop de avaliação de sonolência
 start_loop_time = time.time()  # Início do loop de 60 segundos
-loop_duration = 60  # Duração do loop do periodo de avaliação de sono
+loop_duration = 60  # Duração do loop do período de avaliação de sono
 
 # Variáveis para contagem de tempo com cabeça baixa e olhos fechados
 start_time = 0
@@ -58,7 +58,7 @@ while cap.isOpened():
         ret, frame = cap.read()
         results = model(frame)
 
-        # Define a variavel das caixas delimitadoras
+        # Define a variável das caixas delimitadoras
         annotated_frame = results[0].plot()
 
         # Inicia o estado atual como estado aberto
@@ -99,7 +99,7 @@ while cap.isOpened():
                         tempo_fim_piscada = time.time()
                         duracao_piscada = tempo_fim_piscada - tempo_inicio_piscada
                         tempo_piscada = duracao_piscada
-                        # Define o Nivel de Fádiga dos olhos
+                        # Define o Nível de Fadiga dos olhos
                         if tempo_piscada >= 0.5 and tempo_piscada <=1:
                             nivel_fadiga_olhos = "Leve"
                         elif tempo_piscada > 1 and tempo_piscada <=1.5:
@@ -129,7 +129,7 @@ while cap.isOpened():
                         tempo_fim_pescada = time.time()
                         duracao_pescada = tempo_fim_pescada - tempo_inicio_pescada
                         tempo_pescada = duracao_pescada
-                        # Define o Nivel de Fadiga da cabeça
+                        # Define o Nível de Fadiga da cabeça
                         if tempo_pescada <= 2:
                             nivel_fadiga_cabeca = "Leve"
                         elif tempo_pescada > 2 and tempo_pescada <= 3:
@@ -280,4 +280,5 @@ while cap.isOpened():
 cap.release()
 cv2.destroyAllWindows()
 
-df.to_excel("output4.xlsx", index=False)
+#Ao finalizar a detecção, salvar os dados das tabelas no formato de Excel
+df.to_excel("saida.xlsx", index=False)
