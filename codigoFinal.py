@@ -43,11 +43,13 @@ limite_tempo_cabeca = 3 # Tempo máximo com a cabeça baixa para gerar o alerta
 # Variáveis para controle de Bocejo
 detectando_bocejo = False
 temp_bocejo = 5  # Intervalo de tempo para considerar um novo bocejo
-intervalo_entre_bocejos = 20  # Intervalo de tempo para a próxima detecção após contar um bocejo
+intervalo_entre_bocejos = 10  # Intervalo de tempo para a próxima detecção após contar um bocejo
 
 # Variáveis para contagem de bocejos
 start_time_bocejo = 0
 cont_bocejo = 0
+cont_bocejo_tempo = 0
+limite_bocejo = 2
 ultimo_bocejo_time = 0
 
 # Criação do DataFrame
@@ -154,22 +156,21 @@ while cap.isOpened():
         # Verificar se 60 segundos se passaram               
         elapsed_time = time.time() - start_loop_time
         if elapsed_time >= loop_duration:
-            # Se o contador de piscadas atingir o limite, exibe o alerta
-            if piscadas_tempo >= limite_contador_olhos:
+            # Se o contador de piscadas e o contador de bocejos atingir o limite, exibe o alerta 2
+            if piscadas_tempo >= limite_contador_olhos and cont_bocejo_tempo >= limite_bocejo:
+                alerta_ativo2 = True
+                inicio_alerta = time.time()
+            # Se o contador de pescadas atingir o limite, exibe o alerta 1
+            elif tempo_cabeça_baixa >=limite_contador_cabeca:
                 alerta_ativo = True
                 inicio_alerta = time.time()
-
-            # Reiniciar o contador e o tempo para o próximo ciclo de 60 segundos
+            # Se o contador de piscadas ou o contador de bocejos atingir o limite, exibe o alerta 1
+            elif cont_bocejo_tempo >= limite_bocejo or piscadas_tempo >= limite_contador_olhos:
+                alerta_ativo = True
+            #Reinicia os contadores para o proximo loop
             piscadas_tempo = 0
-            start_loop_time = time.time()
-
-            # Se o contador de pescadas atingir o limite, exibe o alerta
-            if tempo_cabeça_baixa >=limite_contador_cabeca:
-                alerta_ativo = True
-                inicio_alerta = time.time()
-
-            # Reiniciar o contador e o tempo para o próximo ciclo de 60 segundos
             tempo_cabeça_baixa = 0
+            cont_bocejo_tempo = 0
             start_loop_time = time.time()
             
         # Exibir o alerta por 10 segundos
@@ -182,6 +183,17 @@ while cap.isOpened():
                             cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
             else:
                 alerta_ativo = False  # Desativa o alerta após 10 segundos
+
+        # Exibir o alerta 2 por 10 segundos
+        if alerta_ativo2:
+            tempo_alerta = time.time() - inicio_alerta
+            if tempo_alerta < duracao_alerta:
+                # Desenhar o alerta
+                cv2.rectangle(annotated_frame, (175, 420), (480, 460), (0, 0, 255), -1)
+                cv2.putText(annotated_frame, f"ALERTA DE FADIGA PESADA!", (180, 450),
+                            cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
+            else:
+                alerta_ativo2 = False  # Desativa o alerta após 10 segundos
 
         # Incrementar os contadores se houve uma piscada
         if estado_atual_olhos == "aberto" and estado_anterior_olhos == "fechado":
