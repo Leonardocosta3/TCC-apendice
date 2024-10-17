@@ -179,7 +179,7 @@ while cap.isOpened():
             if tempo_alerta < duracao_alerta:
                 # Desenhar o alerta
                 cv2.rectangle(annotated_frame, (175, 420), (455, 460), (0, 0, 255), -1)
-                cv2.putText(annotated_frame, f"ALERTA DE SONOLENCIA!", (180, 450),
+                cv2.putText(annotated_frame, f"ALERTA DE FADIGA LEVE!", (180, 450),
                             cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
             else:
                 alerta_ativo = False  # Desativa o alerta após 10 segundos
@@ -189,8 +189,8 @@ while cap.isOpened():
             tempo_alerta = time.time() - inicio_alerta
             if tempo_alerta < duracao_alerta:
                 # Desenhar o alerta
-                cv2.rectangle(annotated_frame, (175, 420), (480, 460), (0, 0, 255), -1)
-                cv2.putText(annotated_frame, f"ALERTA DE FADIGA PESADA!", (180, 450),
+                cv2.rectangle(annotated_frame, (175, 420), (475, 460), (0, 0, 255), -1)
+                cv2.putText(annotated_frame, f"ALERTA DE FADIGA GRAVE!", (180, 450),
                             cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
             else:
                 alerta_ativo2 = False  # Desativa o alerta após 10 segundos
