@@ -38,7 +38,7 @@ total_time = 0
 detectando_cabeca = False
 detectando_olhos = False
 limite_tempo_olhos = 2 # Tempo máximo de olhos fechados para gerar o alerta
-limite_tempo_cabeca = 3 # Tempo máximo com a cabeça baixa para gerar o alerta
+limite_tempo_cabeca = 2 # Tempo máximo com a cabeça baixa para gerar o alerta
 
 # Variáveis para controle de Bocejo
 detectando_bocejo = False
